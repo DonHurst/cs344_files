@@ -1,4 +1,5 @@
 #include <dirent.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,12 +130,25 @@ struct movie *processFile(char *filePath) {
 /* -------------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------------------------- */
-void createYearFile(struct movie *list) {
+void createYearFiles(struct movie *list, char *dirName) {
+
+    // Instantiate a file descriptor
+    int file_descriptor;
 
     // Step through all values in the linked list
     while (list != NULL) {
 
-       
+        char newFilePath[50];
+        sprintf(newFilePath, "./%s/%d.txt", dirName, list->year);
+
+        // Create or open file for the year
+        file_descriptor = open(newFilePath, O_RDWR | O_CREAT | O_APPEND, 640);
+        write(file_descriptor, list->title, strlen(list->title));
+
+
+
+        // Close the file
+        close(file_descriptor);
         list = list->next;
     }
 }
@@ -179,8 +193,6 @@ int main(int argc, char* argv[]) {
     int choice;
     // Create int for next choice
     int fileChoice;
-
-    
 
     do {
         // Print menu and take user choice
@@ -258,6 +270,8 @@ int main(int argc, char* argv[]) {
                             printf("\n%d | %s\n", randNum, newDirName);
 
                             printf("Created directory with name %s", newDirName);
+
+                            createYearFiles(list, newDirName);
                             
                             break;
 
