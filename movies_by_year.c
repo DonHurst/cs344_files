@@ -13,9 +13,6 @@
 #define ONID "hurstd"
 #define MOVIES "movies"
 
-// Global variable for the number of lines in the file
-int line_count = 0;
-
 // struct for movie information
 struct movie {
     char* title;
@@ -90,6 +87,7 @@ struct movie *processFile(char *filePath) {
     char * currLine = NULL;
     size_t len = 0;
     ssize_t nread;
+    int line_count = 0;
 
     // Set head and tail of the linked list
     struct movie* head = NULL;
@@ -232,11 +230,11 @@ int main(int argc, char* argv[]) {
                             // Go through all entries in directory
                             while((aDir = readdir(currDir)) != NULL) {
 
-                                
+                                // IF file has a matching prefix and extension
                                 if((strncmp(PREFIX, aDir->d_name, strlen(PREFIX)) == 0) && 
                                 (strncmp(EXTENSION, aDir->d_name + strlen(aDir->d_name)-4, strlen(EXTENSION)) == 0))
                                 {
-
+                                    
                                     stat(aDir->d_name, &dirStat);
 
 
@@ -251,8 +249,6 @@ int main(int argc, char* argv[]) {
                                             strcpy(entryName, aDir->d_name);
                                         }
                                     }
-                                    printf("%s ", aDir->d_name);
-                                    printf("%lld\n", dirStat.st_size);
                                     matchingFiles++;
 
                                 }       
@@ -303,8 +299,6 @@ int main(int argc, char* argv[]) {
                                             strcpy(entryName, aDir->d_name);
                                         }
                                     }
-                                    printf("%s ", aDir->d_name);
-                                    printf("%lld\n", dirStat.st_size);
                                     matchingFiles++;
 
                                 }       
