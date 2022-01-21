@@ -138,15 +138,15 @@ void createYearFiles(struct movie *list, char *dirName) {
     // Step through all values in the linked list
     while (list != NULL) {
 
+        printf("%s | %d\n", list->title, list->year);
+
         char newFilePath[50];
         sprintf(newFilePath, "./%s/%d.txt", dirName, list->year);
 
         // Create or open file for the year
-        file_descriptor = open(newFilePath, O_RDWR | O_CREAT | O_APPEND, 640);
-        write(file_descriptor, list->title, strlen(list->title));
-
-
-
+        file_descriptor = open(newFilePath, O_RDWR | O_CREAT | O_APPEND, 0640);
+        write(file_descriptor, strcat(list->title, "\n"), strlen(list->title));
+        
         // Close the file
         close(file_descriptor);
         list = list->next;
@@ -258,7 +258,7 @@ int main(int argc, char* argv[]) {
                                 }       
 
                             }      
-                            printf("\nNow processing the chosen file name %s", entryName); 
+                            printf("\nNow processing the chosen file name %s\n", entryName); 
 
                             sprintf(newDirName, "hurstd.movies.%d", randNum); 
 
@@ -266,10 +266,8 @@ int main(int argc, char* argv[]) {
 
                             // Create a new directory
                             mkdir(newDirName, S_IRWXU | S_IRGRP | S_IXGRP);
-                            
-                            printf("\n%d | %s\n", randNum, newDirName);
 
-                            printf("Created directory with name %s", newDirName);
+                            printf("Created directory with name %s\n", newDirName);
 
                             createYearFiles(list, newDirName);
                             
@@ -313,7 +311,7 @@ int main(int argc, char* argv[]) {
 
                             }      
                             
-                            printf("\nNow processing the chosen file name %s", entryName); 
+                            printf("\nNow processing the chosen file name %s\n", entryName); 
                             sprintf(newDirName, "hurstd.movies.%d", randNum); 
 
                             // Process the chosen file
@@ -323,9 +321,9 @@ int main(int argc, char* argv[]) {
                             // Create a new directory
                             mkdir(newDirName, S_IRWXU | S_IRGRP | S_IXGRP);
 
+                            printf("Created directory with name %s\n", newDirName);
 
-                            printf("\n%d | %s\n", randNum, newDirName);
-                            printf("Created directory with name %s", newDirName);
+                            createYearFiles(list, newDirName);
                             break;
 
                         // Ask user for file name
