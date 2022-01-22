@@ -116,8 +116,7 @@ struct movie *processFile(char *filePath) {
             tail->next = newNode;
             tail = newNode;
         }
-        line_count += 1;
-        
+        line_count += 1;        
     }
     // Free memory, close the file, and return the head of the linked list
     free(currLine);
@@ -126,27 +125,32 @@ struct movie *processFile(char *filePath) {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------
-
+This function takes a list of movies and the name of a directory as parameters. It steps through each value in
+the list and writes the title to a corresponding year file (If no file exists, it creates one).
 ---------------------------------------------------------------------------------------------------------------------------- */
 void createYearFiles(struct movie *list, char *dirName) {
-
     // Instantiate a file descriptor
     int file_descriptor;
 
     // Step through all values in the linked list
     while (list != NULL) {
 
-        printf("%s | %d\n", list->title, list->year);
-
-        char newFilePath[50];
+        // Create string for the new file path
+        char newFilePath[255];
         sprintf(newFilePath, "./%s/%d.txt", dirName, list->year);
 
-        // Create or open file for the year
+        // Create string for the title to be written to the file
+        char titleToWrite[256];
+        sprintf(titleToWrite, "%s\n", list->title);
+
+        // Create or open file for the year and write title to it
         file_descriptor = open(newFilePath, O_RDWR | O_CREAT | O_APPEND, 0640);
-        write(file_descriptor, strcat(list->title, "\n"), strlen(list->title));
+        write(file_descriptor, titleToWrite, strlen(titleToWrite));
         
         // Close the file
         close(file_descriptor);
+
+        // Move to next node in the linked list
         list = list->next;
     }
 }
@@ -177,7 +181,6 @@ void printFileMenu() {
 /*-------------------------------------------------------------------
 This function takes no parameters and returns a random integer.
 This code built with the help of the man pages provided in the course
-https://man7.org/linux/man-pages/man3/random.3.html
 -------------------------------------------------------------------*/
 int generateRandom() {
     time_t t;
@@ -214,13 +217,16 @@ int main(int argc, char* argv[]) {
             case 1:
                 
                 do {
+                    currDir = opendir(".");
                     // Print menu and take choice
                     printFileMenu();
                     scanf("%d", &fileChoice);
 
+                    // Generate a random value
                     int randNum = generateRandom();
 
-                    char newDirName[50];
+                    // Create a variable for new directory name
+                    char newDirName[255];
                     
                     switch(fileChoice) {
 
@@ -234,21 +240,22 @@ int main(int argc, char* argv[]) {
                                 if((strncmp(PREFIX, aDir->d_name, strlen(PREFIX)) == 0) && 
                                 (strncmp(EXTENSION, aDir->d_name + strlen(aDir->d_name)-4, strlen(EXTENSION)) == 0))
                                 {
-                                    
+                                    // Get the stats for the directory
                                     stat(aDir->d_name, &dirStat);
 
-
+                                    // If there are no other valid files, set stats for largest dir and copy to name
                                     if (matchingFiles == 0){
                                         stat(aDir->d_name, &largestDir);
                                         strcpy(entryName, aDir->d_name);
                                     }
-
+                                    // If there are other valid files, compare their size and take the larger one
                                     else {
                                         if (largestDir.st_size < dirStat.st_size) {
                                             stat(aDir->d_name, &largestDir);
                                             strcpy(entryName, aDir->d_name);
                                         }
                                     }
+                                    // Increase the number of valid files
                                     matchingFiles++;
 
                                 }       
@@ -256,15 +263,13 @@ int main(int argc, char* argv[]) {
                             }      
                             printf("\nNow processing the chosen file name %s\n", entryName); 
 
-                            sprintf(newDirName, "hurstd.movies.%d", randNum); 
-
-                            list = processFile(entryName);
-
-                            // Create a new directory
-                            mkdir(newDirName, S_IRWXU | S_IRGRP | S_IXGRP);
-
+                            // Create new directory and process the list
+                            sprintf(newDirName, "hurstd.movies.%d", randNum);
+                            mkdir(newDirName, 0750); 
                             printf("Created directory with name %s\n", newDirName);
-
+                            
+                            // Create list of movies from the file and use it to create subsequent files
+                            list = processFile(entryName); 
                             createYearFiles(list, newDirName);
                             
                             break;
@@ -306,28 +311,54 @@ int main(int argc, char* argv[]) {
                             }      
                             
                             printf("\nNow processing the chosen file name %s\n", entryName); 
-                            sprintf(newDirName, "hurstd.movies.%d", randNum); 
-
-                            // Process the chosen file
-                            list = processFile(entryName);
-
-
-                            // Create a new directory
-                            mkdir(newDirName, S_IRWXU | S_IRGRP | S_IXGRP);
-
+                            
+                            // Create new directory and process the list
+                            sprintf(newDirName, "hurstd.movies.%d", randNum);
+                            mkdir(newDirName, 0750); 
                             printf("Created directory with name %s\n", newDirName);
-
+                            
+                            // Create list of movies from the file and use it to create subsequent files
+                            list = processFile(entryName); 
                             createYearFiles(list, newDirName);
                             break;
 
                         // Ask user for file name
                         case 3:
-                            break;
 
+                            printf("Please enter a file name: \n");
+                            scanf("%s", entryName);
+                            matchingFiles = 0;
+
+                            // Go through all entries in directory
+                            while((aDir = readdir(currDir)) != NULL) {
+                                if((strcmp(entryName, aDir->d_name) == 0)) {
+                                    
+                                    matchingFiles += 1;
+                                    // Generate a random value
+                                    int randNum = generateRandom();
+
+                                    printf("\nNow processing the chosen file name %s\n", entryName); 
+
+                                    // Create new directory and process the list
+                                    sprintf(newDirName, "hurstd.movies.%d", randNum);
+                                    mkdir(newDirName, 0750); 
+                                    printf("Created directory with name %s\n", newDirName);
+
+                                    list = processFile(entryName); 
+                                    createYearFiles(list, newDirName);
+                                }
+                            }
+
+                            if (matchingFiles == 0) {
+                                printf("The file %s was not found. Try again.\n", entryName);
+                            }
+
+
+                            break;
                         default:
                             printf("You entered an invalid choice. Please try again \n\n");
                     }
-                } while(fileChoice != 1 && fileChoice != 2 && fileChoice != 3);
+                } while(fileChoice != 1 && fileChoice != 2 && (fileChoice != 3 || matchingFiles == 0));
 
                 break;
             // Exit the program
