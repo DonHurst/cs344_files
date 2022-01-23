@@ -1,8 +1,5 @@
-make --dry-run --always-make --keep-going --print-directory
-objc[1013]: Class AMSupportURLConnectionDelegate is implemented in both /usr/lib/libauthinstall.dylib (0x20defab90) and /Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/MobileDevice (0x1080502c8). One of the two will be used. Which one is undefined.
-objc[1013]: Class AMSupportURLSession is implemented in both /usr/lib/libauthinstall.dylib (0x20defabe0) and /Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/MobileDevice (0x108050318). One of the two will be used. Which one is undefined.
- 
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/donhurst/Documents/OSU_Courses/cs344/cs344_files'
-gcc -std=gnu99 -Wall -g -o movies_by_year movies_by_year.c
+gcc -std=gnu99 -Wall -g -o movies_by_year movies_by_year.c functions.c
 make: Leaving directory `/Users/donhurst/Documents/OSU_Courses/cs344/cs344_files'
  

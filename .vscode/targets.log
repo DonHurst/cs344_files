@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
  
 
-# Make data base, printed on Fri Jan 21 14:46:52 2022
+# Make data base, printed on Sun Jan 23 13:13:30 2022
 
 # Variables
 
@@ -93,6 +93,7 @@ XPC_FLAGS = 0x0
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
+ 
 # environment
 SHLVL = 1
 # default
@@ -164,14 +165,13 @@ LANG = C
 
 # Pattern-specific Variable Values
 
- 
 # No pattern-specific variable values.
 
 # Directories
 
-# . (device 16777231, inode 6079582): 13 files, no impossibilities.
+# . (device 16777231, inode 6079582): 14 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -187,6 +187,7 @@ all:
 #  File has not been updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+ 
 
 # Not a target:
 .SUFFIXES:
@@ -197,7 +198,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-19 11:12:47
+#  Last modified 2022-01-23 13:13:24
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -214,7 +215,7 @@ main:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 2):
-	gcc -std=gnu99 -Wall -g -o movies_by_year movies_by_year.c
+	gcc -std=gnu99 -Wall -g -o movies_by_year movies_by_year.c functions.c
 	
 
 class:
@@ -238,6 +239,6 @@ class:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Jan 21 14:46:52 2022
+# Finished Make data base on Sun Jan 23 13:13:30 2022
 
  
