@@ -204,6 +204,8 @@ int main(int argc, char* argv[]) {
         DIR* currDir; 
         struct dirent* aDir;
         currDir = opendir(".");
+
+        // Create variables for use in corresponding choices
         struct stat dirStat;
         struct stat largestDir;
         struct stat smallestDir;
@@ -349,6 +351,7 @@ int main(int argc, char* argv[]) {
                                 }
                             }
 
+                            // If there are no matching files, print error message
                             if (matchingFiles == 0) {
                                 printf("The file %s was not found. Try again.\n", entryName);
                             }
